@@ -1,12 +1,22 @@
 import connection from "./connection";
 
-const pessoaModel_getAll = async () => {
-    const pessoa = await connection.execute('select * from empresa.vw_pessoas');
+export const pessoaModel_getAll = async () => {
+    const [pessoa] = await connection.execute('select * from empresa.vw_pessoas');
     return pessoa;
 };
 
-const pessoaModel_insert = async () => {
-    const pessoa = await connection.execute('call sp');
-}
+export class pessoaObj {
+    cpf?: string;
+    nome?: string;
+    data_nascimento?: string;
+    telefone?: string;
+    email?: string;
+};
 
-export default pessoaModel_getAll;
+
+
+export const pessoaModel_insert = async (input: pessoaObj) => {
+    const { cpf, nome, data_nascimento, telefone, email } = input;
+    const [pessoa] = await connection.execute('call sp_insere_pessoa(?,?,?,?,?)', [cpf, nome, data_nascimento, telefone, email]);
+    return pessoa;
+};
