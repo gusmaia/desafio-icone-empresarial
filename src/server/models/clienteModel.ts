@@ -1,21 +1,13 @@
 import connection from "./connection";
 
-export const clienteModel_getAll = async () => {
-    try {
-        const [cliente] = await connection.execute('select * from empresa.vw_clientes');
-        return cliente;
-    } catch (error) {
-        console.error(`Erro ao executar a consulta: ${error}`);
-        return [error];
-    }
-};
 
-class clienteObj {
+
+export class clienteObj {
     id?: any;
     cnpj?: string;
     nome?: string;
     data_fundacao?: string;
-    tipo?: boolean;
+    tipo?: number;
     telefone?: string;
     email?: string;
     cep?: string;
@@ -25,6 +17,26 @@ class clienteObj {
     cidade?: string;
     estado?: string;
 }
+
+export const clienteModel_get = async (id: any) => {
+    try {
+        const [cliente] = await connection.execute('select * from vw_clientes where vw_clientes.id = ?', [id]);
+        return cliente;
+    } catch (error) {
+        console.error(`Erro ao executar a consulta: ${error}`);
+        return [error];
+    }
+};
+
+export const clienteModel_getAll = async () => {
+    try {
+        const [cliente] = await connection.execute('select * from vw_clientes');
+        return cliente;
+    } catch (error) {
+        console.error(`Erro ao executar a consulta: ${error}`);
+        return [error];
+    }
+};
 
 export const clienteModel_create = async (input: clienteObj) => {
     try {
@@ -40,7 +52,7 @@ export const clienteModel_create = async (input: clienteObj) => {
 export const clienteModel_update = async (id:any, input: clienteObj) => {
     try {
         const { cnpj, nome, data_fundacao, tipo, telefone, email, cep, logradouro, numero, bairro, cidade, estado} = input;
-        await connection.execute('call sp_insere_cliente(?,?,?,?,?,?,?,?,?,?,?,?,?)', [id, cnpj, nome, data_fundacao, tipo, telefone, email, cep, logradouro, numero, bairro, cidade, estado]);
+        await connection.execute('call sp_edita_cliente(?,?,?,?,?,?,?,?,?,?,?,?,?)', [id, cnpj, nome, data_fundacao, tipo, telefone, email, cep, logradouro, numero, bairro, cidade, estado]);
         return {id_cliente_alterado: id};
     } catch (error) {
         console.error(`Erro ao executar a consulta: ${error}`);

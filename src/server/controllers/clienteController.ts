@@ -1,5 +1,13 @@
 import express from "express";
-import { clienteModel_getAll, clienteModel_create, clienteModel_update, clienteModel_delete } from "../models/clienteModel";
+import { clienteModel_get, clienteModel_getAll, clienteModel_create, clienteModel_update, clienteModel_delete } from "../models/clienteModel";
+
+
+
+export const clienteController_get = async (req: express.Request, res: express.Response) => {
+    const { id } = req.params;
+    const cliente = await clienteModel_get(id);
+    return res.status(200).json(cliente);
+};
 
 export const clienteController_getAll = async (_: express.Request, res: express.Response) => {
     const cliente = await clienteModel_getAll();

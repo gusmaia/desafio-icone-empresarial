@@ -1,8 +1,18 @@
 import connection from "./connection";
 
-export const pessoaModel_getAll = async () => {
+
+export class pessoaObj {
+    id?: any;
+    cpf?: string;
+    nome?: string;
+    data_nascimento?: string;
+    telefone?: string;
+    email?: string;
+};
+
+export const pessoaModel_get = async (id: any) => {
     try {
-        const [pessoa] = await connection.execute('select * from empresa.vw_pessoas');
+        const [pessoa] = await connection.execute('select * from vw_pessoas where vw_pessoas.id = ?', [id]);
         return pessoa;
     } catch (error) {
         console.error(`Erro ao executar a consulta: ${error}`);
@@ -10,13 +20,14 @@ export const pessoaModel_getAll = async () => {
     }
 };
 
-class pessoaObj {
-    id?: any;
-    cpf?: string;
-    nome?: string;
-    data_nascimento?: string;
-    telefone?: string;
-    email?: string;
+export const pessoaModel_getAll = async () => {
+    try {
+        const [pessoa] = await connection.execute('select * from vw_pessoas');
+        return pessoa;
+    } catch (error) {
+        console.error(`Erro ao executar a consulta: ${error}`);
+        return [error];
+    }
 };
 
 export const pessoaModel_create = async (input: pessoaObj) => {
